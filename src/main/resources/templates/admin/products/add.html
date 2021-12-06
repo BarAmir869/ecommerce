@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="en">
+
+<head th:replace="/fragments/head"></head>
+
+<body>
+
+
+    <nav th:replace="/fragments/nav :: nav-admin"></nav>
+
+
+
+    <div class="container-fluid text-center container-title" style="border-bottom:3px solid black">
+
+        <h1 class="display-2">Add a Product</h1>
+        <a href="/admin/products" class="btn btn-outline-dark btn-lg mb-3 ms-lg-auto">Back to Products</a>
+
+        <div th:if="${message}" th:text="${message}" th:class="${'alert ' + alertClass}"></div>
+    </div>
+    <div class="container mt-2">
+        <form method="post" th:object="${product}" th:action="@{/admin/products/add}" enctype="multipart/form-data">
+
+            <div th:if="${#fields.hasErrors('*')}" class="alert alert-danger">
+                There are errors
+                <!-- <p class="" th:if="${#fields.hasGlobalErrors()}" th:errors="*{global}"></p> -->
+            </div>
+
+            <div class="form-group">
+                <label for="">Name:</label>
+                <input type="text" class="form-control" th:field="*{name}" placeholder="Name">
+                <span class="error" th:if="${#fields.hasErrors('name')}" th:errors="*{name}"></span>
+            </div>
+
+            <div class="form-group">
+                <label for="">Description:</label>
+                <textarea th:field="*{description}" rows="10" class="form-control" placeholder="Content"></textarea>
+                <span class="error" th:if="${#fields.hasErrors('description')}" th:errors="*{description}"></span>
+            </div>
+
+            <div class="form-group">
+                <label for="">Image</label>
+                <input type="file" class="form-control" th:name="file" th:id="file">
+                <img src="#" alt="" id="imgPreview1">
+                <span class="error" th:if="${#fields.hasErrors('image')}" th:errors="*{image}"></span>
+            </div>
+
+            <div class="form-group">
+                <label for="">Price:</label>
+                <input type="text" class="form-control" th:field="*{price}" placeholder="20 or 20.99">
+                <span class="error" th:if="${#fields.hasErrors('price')}" th:errors="*{price}"></span>
+            </div>
+
+            <div class="form-group">
+                <label for="">Amount:</label>
+                <input type="text" class="form-control" th:field="*{amount}" placeholder="amount">
+                <span class="error" th:if="${#fields.hasErrors('amount')}" th:errors="*{amount}"></span>
+            </div>
+            <div class="form-group">
+                <label for="">Category:</label>
+                <Select class="form-control" th:field="*{category}">
+                    <option th:value="0"> Choose category</option>
+                    <option th:each=" cat : ${categories}" th:value="${cat.id}" th:text="${cat.name}"></option>
+                </Select>
+                <span class="error" th:if="${#fields.hasErrors('category')}" th:errors="*{category}"></span>
+            </div>
+
+
+
+            <button class="btn btn-danger mb-5">Add</button>
+
+        </form>
+
+    </div>
+
+    <div th:replace="/fragments/footer"></div>
+    <script>
+        $(function () {
+            $("#file").change(function () {
+                readURL(this, '1');
+            })
+        })
+    </script>
+</body>
+
+</html>

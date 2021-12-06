@@ -1,0 +1,80 @@
+<!doctype html>
+<html lang="en">
+
+<head th:replace="/fragments/head"></head>
+
+<body>
+    <nav th:replace="/fragments/nav::nav-admin"></nav>
+    <section id="title">
+
+        <div class="jumbotron jumbotron-fluid">
+            <div class="container-fluid text-center container-title">
+                <h1 class="display-2"> Pages</h1>
+                <p class="lead">Customize your pages</p>
+                <hr class="my-2">
+                <p class="lead">
+                    <a class="btn btn-outline-dark btn-lg mb-3 ms-lg-auto" href="/admin/pages/add" role="button">Add
+                        New</a>
+                </p>
+            </div>
+        </div>
+    </section>
+    <div class="container">
+        <div th:if="${!pages.empty}">
+            <table class="table sorting" id="pages">
+                <tr class="home">
+                    <th>Title</th>
+                    <th>Slug</th>
+                    <th>Edit</th>
+                    <th>Delete</th>
+                </tr>
+
+                <tr th:each="page: ${pages}" th:id="'id_' + ${page.id}" th:class=${page.slug}>
+                    <td th:text="${page.title}"></td>
+                    <td th:text="${page.slug}"></td>
+                    <td><a th:href="@{'/admin/pages/edit/'+ ${page.id}}">Edit</a></td>
+                    <td><a th:href="@{'/admin/pages/delete/'+ ${page.id}}"
+                            th:classappend="${page.slug == 'home'} ? 'd-none' : ''" class="confirmDeletion"
+                            th:id="${page.title}" th:name="Page">Delete</a>
+                        <input type="hidden" id="deleteMsg" name="deleteMsg"
+                            value="This will delete all the information in it.">
+                    </td>
+
+                </tr>
+            </table>
+        </div>
+        <div th:unless="${!pages.empty}">
+
+            <h4 class="display-4">There are NO pages at the moment</h4>
+
+        </div>
+    </div>
+
+
+
+
+
+
+
+    <!-- FOOTER -->
+    <div th:replace="/fragments/footer"></div>
+
+
+    <script>
+        $("table#pages tbody").sortable({
+            items: "tr:not(.home)",
+            placeholder: "ui-state-highlight",
+            update: function () {
+                let ids = $("table#pages tbody").sortable("serialize");
+                let url = "/admin/pages/reorder";
+
+                $.post(url, ids, function (data) {
+                    console.log(data);
+                });
+            }
+        });
+    </script>
+
+</body>
+
+</html>
